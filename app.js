@@ -8,9 +8,19 @@
 
 // }
 
+
+document.getElementById('search-field').addEventListener('keypress',function(event){
+    
+    if (event.key=="Enter"){
+        document.getElementById("search-button").click();
+    }
+    
+});
+
 const searchSongs=()=>{
     const searchText=document.getElementById('search-field').value;
     const url=`https://api.lyrics.ovh/suggest/:${searchText}`
+    toggleSpinner();
     fetch(url)
     .then(res=>res.json())
     .then(data =>displaySongs(data.data))
@@ -45,11 +55,13 @@ const displaySongs=songs=>{
        
        `;
         songContainer.appendChild(songDiv);
+        toggleSpinner();
     })
 }
 
 
 const getLyric=async(artist,title)=>{
+    toggleSpinner();
     const url=`https://api.lyrics.ovh/v1/${artist}/${title}`
   try {
     const res= await fetch(url)
@@ -67,6 +79,7 @@ const displayLyrics=lyrics=>{
     const lyricsDiv=document.getElementById('song-lyrics')
     lyricsDiv.innerText='';
     lyricsDiv.innerText=lyrics;
+    toggleSpinner();
 
 }
 
@@ -75,4 +88,16 @@ const displayError=error=>{
     const errorTag=document.getElementById('error-msg');
     errorTag.innerText=error;
     errorTag.className="justify-content-center align-items-center text-danger text-center"
+}
+
+
+const toggleSpinner=()=>{
+    const spinner=document.getElementById('spinner');
+    const songs=document.getElementById('search-result');
+  
+    spinner.classList.toggle('d-none');
+    songs.classList.toggle('d-none');
+   
+   
+
 }
